@@ -14,11 +14,6 @@ fn process(input: &str) -> usize {
         .collect_vec();
     let ((grid_x_max, grid_y_max), _) = grid.last().unwrap();
 
-    println!("grid_x_max => {:?}", grid_x_max);
-    println!("grid_y_max => {:?}", grid_y_max);
-
-    println!("grid => {:?}", grid);
-
     let mut visible_count = 0;
 
     for tree in grid.iter() {
@@ -46,22 +41,12 @@ fn process(input: &str) -> usize {
                 .filter(|((x, y), _)| y == &tree.0 .1 && x > &tree.0 .0)
                 .any(|((_, _), n)| n >= &tree.1);
 
-            println!(
-                "invisible => {:?}",
-                (
-                    invisible_left,
-                    invisible_right,
-                    invisible_up,
-                    invisible_down
-                )
-            );
-
             if !invisible_up || !invisible_down || !invisible_left || !invisible_right {
                 visible_count += 1;
             }
         }
     }
-    println!("visible_count => {:?}", visible_count);
+
     visible_count
 }
 
