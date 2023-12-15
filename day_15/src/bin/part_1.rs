@@ -10,12 +10,11 @@ fn find_coverage(
 
     let sb_distance = (sensor.0 - beacon.0).abs() + (sensor.1 - beacon.1).abs();
     let sy_distance = (sensor.1 - y_row).abs();
-    let s_row_range = (sb_distance * 2) + 1;
-    let sy_coverage = s_row_range - (sy_distance * 2);
+    let sy_coverage = sb_distance - sy_distance;
 
     if sy_coverage > 0 {
-        let min_x = sensor.0 - ((sy_coverage - 1) / 2);
-        let max_x = sensor.0 + ((sy_coverage - 1) / 2);
+        let min_x = sensor.0 - sy_coverage;
+        let max_x = sensor.0 + sy_coverage;
 
         for i in min_x..=max_x {
             coverage.insert((i, y_row));
