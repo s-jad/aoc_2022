@@ -1,21 +1,25 @@
 use itertools::Itertools;
 use std::{collections::HashSet, time::Instant};
 
-fn find_coverage(sensor: (isize, isize), beacon: (isize, isize)) -> HashSet<(isize, isize)> {
-    let mut coverage = HashSet::from([sensor]);
-    coverage.insert(sensor);
+fn find_coverage(
+    sensor: (isize, isize),
+    beacon: (isize, isize),
+    y_row: isize,
+) -> HashSet<(isize, isize)> {
+    let mut coverage = HashSet::new();
 
-    let steps = &[(-1, 0), (1, 0), (0, 1), (0, -1)];
+    let sb_distance = (sensor.0 - beacon.0).abs() + (sensor.1 - beacon.1).abs();
+    let sy_distance = (sensor.1 - y_row).abs();
+    let s_row_range = (sb_distance * 2) + 1;
+    let sy_coverage = s_row_range - (sy_distance * 2);
 
-    let mut current_coverage = HashSet::from([sensor]);
+    if sy_coverage > 0 {
+        let min_x = sensor.0 - ((sy_coverage - 1) / 2);
+        let max_x = sensor.0 + ((sy_coverage - 1) / 2);
 
-    while !coverage.contains(&beacon) {
-        for point in current_coverage.clone().into_iter() {
-            for step in steps {
-                coverage.insert((point.0 + step.0, point.1 + step.1));
-            }
+        for i in min_x..=max_x {
+            coverage.insert((i, y_row));
         }
-        current_coverage = coverage.clone();
     }
     coverage
 }
@@ -37,8 +41,7 @@ fn process(input: &str) -> usize {
 
     let mut total_coverage = HashSet::new();
     for i in 0..sb.len() {
-        let mut coverage = find_coverage(sb[i].0, sb[i].1);
-        coverage.retain(|(_, y)| y == &Y_ROW);
+        let coverage = find_coverage(sb[i].0, sb[i].1, Y_ROW);
         total_coverage.extend(coverage);
     }
 
