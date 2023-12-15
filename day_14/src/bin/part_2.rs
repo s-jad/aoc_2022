@@ -53,21 +53,18 @@ pub fn process(input: &str) -> usize {
             let diag_l = (point.0 - 1, point.1 + 1);
             let diag_r = (point.0 + 1, point.1 + 1);
 
-            if !rock_set.contains(&below) {
+            if rock_set.insert(below) {
                 sand_count += 1;
                 next_row.insert(below);
-                rock_set.insert(below);
             }
 
-            if !rock_set.contains(&diag_l) {
+            if rock_set.insert(diag_l) {
                 sand_count += 1;
                 next_row.insert(diag_l);
-                rock_set.insert(diag_l);
             }
-            if !rock_set.contains(&diag_r) {
+            if rock_set.insert(diag_r) {
                 sand_count += 1;
                 next_row.insert(diag_r);
-                rock_set.insert(diag_r);
             }
         }
         prev_row = next_row;
